@@ -6,15 +6,13 @@ use App\Models\Item;
 use App\Models\Lending;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\LendingsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LendingController extends Controller
 {
     
 
-    public function adminIndex(){
-        $lendings = Lending::with(['item', 'user'])->orderBy('created_at', 'desc')->get();
-        
-    }
     public function index()
     {
         $lendings = Lending::with(['item', 'user'])->orderBy('created_at', 'desc')->get();
@@ -42,7 +40,7 @@ class LendingController extends Controller
 
         try {
             DB::transaction(function () use ($request, $signature, $userId) {
-                // Pre-calculate requested totals to handle duplicate item selections in the form
+
                 $requestedTotals = [];
                 foreach ($request->items as $itemData) {
                     $requestedTotals[$itemData['item_id']] = ($requestedTotals[$itemData['item_id']] ?? 0) + $itemData['total'];
@@ -89,6 +87,16 @@ class LendingController extends Controller
         ]);
 
         return back()->with('success', 'Item marked as returned successfully.');
+    }
+
+    public function destroy(Lending $lending){
+        $lending->delete();
+        return back()->with('success', 'Item Successfully removed');
+    }
+
+     public function export()
+    {
+        return Excel::download(new LendingsExport, 'lendings-' . '.xlsx');
     }
 
 }

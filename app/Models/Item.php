@@ -21,8 +21,14 @@ class Item extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function lending()
+    public function lendings()
     {
         return $this->hasMany(Lending::class);
+    }
+
+     public function getAvailableAttribute()
+    {
+        $borrowed = $this->lendings()->where('status', 'borrowed')->sum('total');
+        return $this->total - $this->repair - $borrowed;
     }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ItemsExport;
 
 class ItemController extends Controller
 {
@@ -16,6 +18,14 @@ class ItemController extends Controller
         $items = Item::with('category')->orderBy('created_at', 'desc')->get();
         return view ('admin.items.index', compact('items'));
     }
+    public function staffIndex()
+    {
+        //
+        $items = Item::with('category')->orderBy('created_at', 'desc')->get();
+        return view ('staff.items.index', compact('items'));
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -46,6 +56,12 @@ class ItemController extends Controller
         ]);
 
         return redirect()->route('admin.items.index')->with('success', 'items successfully created');
+    }
+
+      public function lendings(Item $item)
+    {
+        $item->load(['lendings.user']);
+        return view('admin.items.lendings', compact('item'));
     }
 
     /**
@@ -99,5 +115,10 @@ class ItemController extends Controller
     {
         $item->delete();
         return redirect()->route('admin.items.index')->with('success', 'Item deleted successfully.');
+    }
+
+        public function export()
+    {
+        return Excel::download(new ItemsExport, 'items-' . '.xlsx');
     }
 }

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('status', ['borrowed', 'returned'])->default('borrowed');
             $table->string('description')->nullable();
             $table->string('signature')->nullable();
-            $table->date('return_date')->nullable();
+            $table->datetime('return_date')->nullable();
         });
     }
 
