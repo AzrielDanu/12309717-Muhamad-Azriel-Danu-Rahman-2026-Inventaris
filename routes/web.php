@@ -54,7 +54,7 @@ Route::middleware('isAuth')->group(function () {
         Route::put('/items/{item}', [ItemController::class, 'update'])->name('admin.items.update');
         Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('admin.items.destroy');
         Route::get('/items/{item}/lending', [ItemController::class, 'lendings'])->name('admin.items.lendings');
-        Route::get('/items/export', [ItemController::class, 'exports'])->name('admin.items.export');
+        Route::get('/items/export', [ItemController::class, 'export'])->name('admin.items.export');
 
          Route::get('/users/admins', [UserController::class, 'adminIndex'])->name('admin.users.admins');
         Route::get('/users/operators', [UserController::class, 'operatorIndex'])->name('admin.users.operators');
